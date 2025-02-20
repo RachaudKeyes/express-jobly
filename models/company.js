@@ -92,7 +92,7 @@ class Company {
       whereValues.push(`num_employees <= $${queryValues.length}`);
     }
 
-    // compounded where statement - multiple search params
+    // where statement 
     if (whereValues.length > 0) {
       query += " WHERE " + whereValues.join(" AND ");
     }

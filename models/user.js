@@ -208,7 +208,7 @@ class User {
   /** Apply for job: update db, returns undefined.
    * 
    * - username: username applying for job
-   * - jobId: job id
+   * - jobId: job_id
    */
 
   static async applyToJob(username, jobId) {
@@ -226,11 +226,20 @@ class User {
     const user = checkUser.rows[0];
     if (!user) throw new NotFoundError(`No username: ${username}`);
 
+    // Check if user has applied to job
+    const checkApplied = await db.query(`
+      SELECT username, job_id FROM applications
+      WHERE username = $1 AND job_id = $2`,
+      [username, jobId]);
+
+    if(checkApplied.rows.length > 0) throw new BadRequestError("You have already applied for this job.")
+
     // Apply for job
     await db.query(`
-      INSERT INTO applications (job_id, username)
-      VALUES ($1, $2)`,
-      [jobId, username]);
+          INSERT INTO applications (job_id, username)
+          VALUES ($1, $2)
+          RETURNING job_id`,
+          [jobId, username]);
   }
 }
 

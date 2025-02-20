@@ -1,6 +1,5 @@
 const { BadRequestError } = require("../expressError");
 
-// THIS NEEDS SOME GREAT DOCUMENTATION.
 /**
  * Helper method for making selective/partial update queries.
  * 
